@@ -8,6 +8,8 @@
 #![cfg_attr(docsrs, doc(cfg_hide(docsrs)))]
 
 /// Autonomous System Number (ASN)
+///
+/// Four-Octet ASN as per [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 // serde Serialize, Deserialize with feature
