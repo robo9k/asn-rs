@@ -7,6 +7,9 @@
 #![cfg_attr(docsrs, feature(doc_cfg_hide))]
 #![cfg_attr(docsrs, doc(cfg_hide(docsrs)))]
 
+#[cfg(feature = "alloc")]
+extern crate alloc;
+
 /// Autonomous System Number (ASN)
 ///
 /// Four-Octet ASN as per [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)
@@ -45,6 +48,15 @@ impl core::convert::From<u16> for Asn {
     #[inline]
     fn from(asn: u16) -> Asn {
         Asn::new(u32::from(asn))
+    }
+}
+
+#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
+#[cfg(feature = "alloc")]
+impl alloc::fmt::Display for Asn {
+    /// Formats according to "asplain" decimal value representation as per [RFC 5396](https://datatracker.ietf.org/doc/html/rfc5396)
+    fn fmt(&self, f: &mut alloc::fmt::Formatter) -> alloc::fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
@@ -92,5 +104,13 @@ mod tests {
     #[test]
     fn test_asn0_eq() {
         assert_eq!(Asn::ZERO, Asn::new(0));
+    }
+
+    #[cfg(feature = "alloc")]
+    #[test]
+    fn test_display() {
+        // https://datatracker.ietf.org/doc/html/rfc5396#section-2
+        assert_eq!(format!("{}", Asn::new(65526)), "65526");
+        assert_eq!(format!("{}", Asn::new(65546)), "65546");
     }
 }

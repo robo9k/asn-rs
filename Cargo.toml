@@ -20,6 +20,9 @@ maintenance = { status = "experimental" }
 [features]
 default = [
     "std",
+    "alloc"
 ]
 std = [
+    "alloc",
 ]
+alloc = []
