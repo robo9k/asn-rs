@@ -2,5 +2,24 @@
 name = "asn"
 version = "0.1.0"
 edition = "2021"
+description = "Typesafe Autonomous System Number (ASN)"
+repository = "https://github.com/robo9k/asn-rs"
+license = "MIT OR Apache-2.0"
+categories = ["no-std"]
+
+[package.metadata.docs.rs]
+targets = []
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
 
 [dependencies]
+
+[badges]
+maintenance = { status = "experimental" }
+
+[features]
+default = [
+    "std",
+]
+std = [
+]
