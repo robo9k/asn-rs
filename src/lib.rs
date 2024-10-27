@@ -14,6 +14,9 @@
 pub struct Asn(u32);
 
 impl Asn {
+    /// ASN for AS 0 (zero) as per [RFC 7607](https://datatracker.ietf.org/doc/html/rfc7607)
+    pub const ZERO: Self = Self::new(0);
+
     #[inline]
     pub const fn new(asn: u32) -> Self {
         Self(asn)
@@ -82,5 +85,10 @@ mod tests {
     #[test]
     fn test_debug() {
         assert_eq!(format!("{:?}", Asn::new(0)), "Asn(0)");
+    }
+
+    #[test]
+    fn test_asn0_eq() {
+        assert_eq!(Asn::ZERO, Asn::new(0));
     }
 }
