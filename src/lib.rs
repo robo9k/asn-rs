@@ -67,6 +67,8 @@ impl Asn {
     // TODO: pub const fn is_reserved_trans ?
 
     // TODO: pub const fn is_reserved_iana ? (reserved4 or just reserved would clash with a fn encompassing the other reservations)
+
+    // TODO: pub const fn is_public ?
 }
 
 impl core::convert::From<Asn> for u32 {
