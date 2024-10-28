@@ -300,3 +300,7 @@ mod tests {
         assert_eq!("65526".parse(), Ok(Asn::new(65526)));
     }
 }
+
+#[cfg(doctest)]
+#[doc=include_str!("../README-crate.md")]
+mod readme {}
