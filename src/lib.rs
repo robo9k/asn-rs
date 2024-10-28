@@ -44,6 +44,9 @@ impl Asn {
     pub const RESERVED_PRIVATE4: core::ops::RangeInclusive<Self> =
         (Self::new(4200000000)..=Self::new(4294967294));
 
+    /// Reserved to represent non-mappable four-octet AS numbers as two-octet AS numbers as per [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)
+    pub const TRANS: Self = Self::new(23456);
+
     #[inline]
     pub const fn new(asn: u32) -> Self {
         Self(asn)
@@ -56,6 +59,8 @@ impl Asn {
     // TODO: pub const fn is_reserved_documentation ?
 
     // TODO: pub const fn is_reserved_private ?
+
+    // TODO: pub const fn is_reserved_trans ?
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -169,5 +174,10 @@ mod tests {
     fn test_reserved_private_contains() {
         assert!(Asn::RESERVED_PRIVATE.contains(&Asn::new(64520)));
         assert!(Asn::RESERVED_PRIVATE4.contains(&Asn::new(4242424242)));
+    }
+
+    #[test]
+    fn test_trans_eq() {
+        assert_eq!(Asn::TRANS, Asn::new(23456));
     }
 }
