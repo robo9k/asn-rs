@@ -56,7 +56,70 @@ impl Asn {
         Self(asn)
     }
 
-    // TODO: pub const from_str
+    pub const fn from_str(src: &str) -> Result<Self, ParseAsnError> {
+        if src.is_empty() {
+            return Err(ParseAsnError());
+        }
+
+        // all valid digits are ascii, so we will just iterate over the utf8 bytes
+        // and cast them to chars. .to_digit() will safely return None for anything
+        // other than a valid ascii digit for the given radix, including the first-byte
+        // of multi-byte sequences
+        let src = src.as_bytes();
+        let mut digits = src;
+
+        let mut result = 0;
+
+        macro_rules! unwrap_or_PAE {
+            ($option:expr) => {
+                match $option {
+                    Some(value) => value,
+                    None => return Err(ParseAsnError()),
+                }
+            };
+        }
+
+        #[inline(always)]
+        pub const fn can_not_overflow<T>(digits: &[u8]) -> bool {
+            digits.len() <= core::mem::size_of::<T>() * 2
+        }
+
+        if can_not_overflow::<u32>(digits) {
+            // If the len of the str is short compared to the range of the type
+            // we are parsing into, then we can be certain that an overflow will not occur.
+            // This bound is when `radix.pow(digits.len()) - 1 <= T::MAX` but the condition
+            // above is a faster (conservative) approximation of this.
+            //
+            // Consider radix 16 as it has the highest information density per digit and will thus overflow the earliest:
+            // `u8::MAX` is `ff` - any str of len 2 is guaranteed to not overflow.
+            // `i8::MAX` is `7f` - only a str of len 1 is guaranteed to not overflow.
+            while let [c, rest @ ..] = digits {
+                result *= 10_u32;
+                let x = unwrap_or_PAE!((*c as char).to_digit(10));
+                result += x;
+                digits = rest;
+            }
+        } else {
+            while let [c, rest @ ..] = digits {
+                // When `radix` is passed in as a literal, rather than doing a slow `imul`
+                // the compiler can use shifts if `radix` can be expressed as a
+                // sum of powers of 2 (x*10 can be written as x*8 + x*2).
+                // When the compiler can't use these optimisations,
+                // the latency of the multiplication can be hidden by issuing it
+                // before the result is needed to improve performance on
+                // modern out-of-order CPU as multiplication here is slower
+                // than the other instructions, we can get the end result faster
+                // doing multiplication first and let the CPU spends other cycles
+                // doing other computation and get multiplication result later.
+                let mul = result.checked_mul(10_u32);
+                let x = unwrap_or_PAE!((*c as char).to_digit(10));
+                result = unwrap_or_PAE!(mul);
+                result = unwrap_or_PAE!(u32::checked_add(result, x));
+                digits = rest;
+            }
+        }
+        Ok(Self(result))
+    }
 
     // TODO: pub const fn is_reserved_last ?
 
@@ -99,7 +162,13 @@ impl core::convert::From<u16> for Asn {
     }
 }
 
-// TODO: core::str::FromStr for Asn
+impl core::str::FromStr for Asn {
+    type Err = ParseAsnError;
+
+    fn from_str(src: &str) -> Result<Self, Self::Err> {
+        Self::from_str(src)
+    }
+}
 
 #[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 #[cfg(feature = "alloc")]
@@ -116,6 +185,20 @@ impl alloc::fmt::Display for Asn {
 // https://datatracker.ietf.org/doc/html/rfc5396#section-2
 
 // TODO: nightly core::iter::Step for Asn
+
+/// Error which can be returned when parsing an [`Asn`]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct ParseAsnError();
+
+#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
+#[cfg(feature = "alloc")]
+impl alloc::fmt::Display for ParseAsnError {
+    fn fmt(&self, f: &mut alloc::fmt::Formatter) -> alloc::fmt::Result {
+        write!(f, "can not parse ASN")
+    }
+}
+
+impl core::error::Error for ParseAsnError {}
 
 #[cfg(test)]
 mod tests {
@@ -197,5 +280,30 @@ mod tests {
     #[test]
     fn test_reserved_iana_contains() {
         assert!(Asn::RESERVED_IANA4.contains(&Asn::new(100000)));
+    }
+
+    #[test]
+    fn test_from_str() -> Result<(), Box<dyn std::error::Error>> {
+        // https://datatracker.ietf.org/doc/html/rfc5396#section-2
+        assert_eq!(Asn::from_str("65526")?, Asn::new(65526));
+        assert_eq!(Asn::from_str("65546")?, Asn::new(65546));
+
+        assert_eq!(Asn::from_str("hurz").unwrap_err(), ParseAsnError());
+
+        Ok(())
+    }
+
+    #[cfg(feature = "alloc")]
+    #[test]
+    fn test_parseasnerror_display() {
+        assert_eq!(
+            format!("{}", Asn::from_str("hurz").unwrap_err()),
+            "can not parse ASN"
+        );
+    }
+
+    #[test]
+    fn test_fromstr() {
+        assert_eq!("65526".parse(), Ok(Asn::new(65526)));
     }
 }
