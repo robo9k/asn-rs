@@ -1,6 +1,6 @@
 [package]
 name = "asn"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Newtype for Autonomous System Number (ASN)"
 readme = "README-crate.md"
