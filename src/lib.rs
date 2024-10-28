@@ -69,6 +69,9 @@ impl Asn {
     // TODO: pub const fn is_reserved_iana ? (reserved4 or just reserved would clash with a fn encompassing the other reservations)
 
     // TODO: pub const fn is_public ?
+
+    // TODO: pub const BITS
+    // TODO: pub const MIN, pub const MAX
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -77,6 +80,8 @@ impl core::convert::From<Asn> for u32 {
         asn.0
     }
 }
+
+// TODO: infallible core::convert::TryFrom<u32> for Asn
 
 impl core::convert::From<u32> for Asn {
     #[inline]
