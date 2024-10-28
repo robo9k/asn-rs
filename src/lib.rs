@@ -137,6 +137,8 @@ impl Asn {
     // TODO: pub const MIN, pub const MAX
 }
 
+// TODO: with reference core::convert::From<&Asn> for u32
+
 impl core::convert::From<Asn> for u32 {
     #[inline]
     fn from(asn: Asn) -> u32 {
