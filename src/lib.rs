@@ -28,6 +28,14 @@ impl Asn {
     /// Reserved "Last" 32-bit ASN as per [RFC 7300](https://datatracker.ietf.org/doc/html/rfc7300)
     pub const LAST4: Self = Self::new(4294967295);
 
+    /// Reserved for documentation use (16-bit number set) as per [RFC 5398](https://datatracker.ietf.org/doc/html/rfc5398)
+    pub const RESERVED_DOCUMENTATION: core::ops::RangeInclusive<Self> =
+        (Self::new(64496)..=Self::new(64511));
+
+    /// Reserved for documentation use (32-bit number set) as per [RFC 5398](https://datatracker.ietf.org/doc/html/rfc5398)
+    pub const RESERVED_DOCUMENTATION4: core::ops::RangeInclusive<Self> =
+        (Self::new(65536)..=Self::new(65551));
+
     #[inline]
     pub const fn new(asn: u32) -> Self {
         Self(asn)
@@ -36,6 +44,8 @@ impl Asn {
     // TODO: pub const from_str
 
     // TODO: pub const fn is_reserved_last ?
+
+    // TODO: pub const fn is_reserved_documentation ?
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -137,5 +147,11 @@ mod tests {
     fn test_last_eq() {
         assert_eq!(Asn::LAST, Asn::new(65535));
         assert_eq!(Asn::LAST4, Asn::new(4294967295));
+    }
+
+    #[test]
+    fn test_reserved_documentation_contains() {
+        assert!(Asn::RESERVED_DOCUMENTATION.contains(&Asn::new(64500)));
+        assert!(Asn::RESERVED_DOCUMENTATION4.contains(&Asn::new(65540)));
     }
 }
