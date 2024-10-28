@@ -36,6 +36,14 @@ impl Asn {
     pub const RESERVED_DOCUMENTATION4: core::ops::RangeInclusive<Self> =
         (Self::new(65536)..=Self::new(65551));
 
+    /// Reserved for private use (16-bit ASNs) as per [RFC 6996](https://datatracker.ietf.org/doc/html/rfc6996)
+    pub const RESERVED_PRIVATE: core::ops::RangeInclusive<Self> =
+        (Self::new(64512)..=Self::new(65534));
+
+    /// Reserved for private use (32-bit ASNs) as per [RFC 6996](https://datatracker.ietf.org/doc/html/rfc6996)
+    pub const RESERVED_PRIVATE4: core::ops::RangeInclusive<Self> =
+        (Self::new(4200000000)..=Self::new(4294967294));
+
     #[inline]
     pub const fn new(asn: u32) -> Self {
         Self(asn)
@@ -46,6 +54,8 @@ impl Asn {
     // TODO: pub const fn is_reserved_last ?
 
     // TODO: pub const fn is_reserved_documentation ?
+
+    // TODO: pub const fn is_reserved_private ?
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -153,5 +163,11 @@ mod tests {
     fn test_reserved_documentation_contains() {
         assert!(Asn::RESERVED_DOCUMENTATION.contains(&Asn::new(64500)));
         assert!(Asn::RESERVED_DOCUMENTATION4.contains(&Asn::new(65540)));
+    }
+
+    #[test]
+    fn test_reserved_private_contains() {
+        assert!(Asn::RESERVED_PRIVATE.contains(&Asn::new(64520)));
+        assert!(Asn::RESERVED_PRIVATE4.contains(&Asn::new(4242424242)));
     }
 }
