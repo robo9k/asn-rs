@@ -77,6 +77,8 @@ impl alloc::fmt::Display for Asn {
 // https://doc.rust-lang.org/std/fmt/trait.Display.html#internationalization
 // https://datatracker.ietf.org/doc/html/rfc5396#section-2
 
+// TODO: nightly core::iter::Step for Asn
+
 #[cfg(test)]
 mod tests {
     use super::*;
