@@ -15,7 +15,7 @@ extern crate alloc;
 /// Four-Octet ASN as per [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)
 #[repr(transparent)]
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
-// serde Serialize, Deserialize with feature
+// TODO: serde Serialize, Deserialize with feature
 pub struct Asn(u32);
 
 impl Asn {
@@ -26,6 +26,8 @@ impl Asn {
     pub const fn new(asn: u32) -> Self {
         Self(asn)
     }
+
+    // TODO: pub const from_str
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -42,7 +44,7 @@ impl core::convert::From<u32> for Asn {
     }
 }
 
-// TryFrom<Asn> for u16
+// TODO: core::convert::TryFrom<Asn> for u16
 
 impl core::convert::From<u16> for Asn {
     #[inline]
@@ -50,6 +52,8 @@ impl core::convert::From<u16> for Asn {
         Asn::new(u32::from(asn))
     }
 }
+
+// TODO: core::str::FromStr for Asn
 
 #[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
 #[cfg(feature = "alloc")]
@@ -59,6 +63,11 @@ impl alloc::fmt::Display for Asn {
         write!(f, "{}", self.0)
     }
 }
+
+// TODO: "asdot+" alloc::fmt::Display
+// TODO: "asdot" alloc::fmt::Display
+// https://doc.rust-lang.org/std/fmt/trait.Display.html#internationalization
+// https://datatracker.ietf.org/doc/html/rfc5396#section-2
 
 #[cfg(test)]
 mod tests {
