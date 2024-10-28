@@ -170,17 +170,15 @@ impl core::str::FromStr for Asn {
     }
 }
 
-#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
-#[cfg(feature = "alloc")]
-impl alloc::fmt::Display for Asn {
+impl core::fmt::Display for Asn {
     /// Formats according to "asplain" decimal value representation as per [RFC 5396](https://datatracker.ietf.org/doc/html/rfc5396)
-    fn fmt(&self, f: &mut alloc::fmt::Formatter) -> alloc::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "{}", self.0)
     }
 }
 
-// TODO: "asdot+" alloc::fmt::Display
-// TODO: "asdot" alloc::fmt::Display
+// TODO: "asdot+" core::fmt::Display
+// TODO: "asdot" core::fmt::Display
 // https://doc.rust-lang.org/std/fmt/trait.Display.html#internationalization
 // https://datatracker.ietf.org/doc/html/rfc5396#section-2
 
@@ -190,10 +188,8 @@ impl alloc::fmt::Display for Asn {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ParseAsnError();
 
-#[cfg_attr(docsrs, doc(cfg(feature = "alloc")))]
-#[cfg(feature = "alloc")]
-impl alloc::fmt::Display for ParseAsnError {
-    fn fmt(&self, f: &mut alloc::fmt::Formatter) -> alloc::fmt::Result {
+impl core::fmt::Display for ParseAsnError {
+    fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
         write!(f, "can not parse ASN")
     }
 }
@@ -246,7 +242,6 @@ mod tests {
         assert_eq!(Asn::ZERO, Asn::new(0));
     }
 
-    #[cfg(feature = "alloc")]
     #[test]
     fn test_display() {
         // https://datatracker.ietf.org/doc/html/rfc5396#section-2
@@ -293,7 +288,6 @@ mod tests {
         Ok(())
     }
 
-    #[cfg(feature = "alloc")]
     #[test]
     fn test_parseasnerror_display() {
         assert_eq!(
