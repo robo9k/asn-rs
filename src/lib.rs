@@ -2,13 +2,10 @@
 // SPDX-License-Identifier: MIT OR Apache-2.0
 
 #![deny(unsafe_code)]
-#![cfg_attr(not(any(test, feature = "std")), no_std)]
+#![cfg_attr(not(any(test)), no_std)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![cfg_attr(docsrs, feature(doc_cfg_hide))]
 #![cfg_attr(docsrs, doc(cfg_hide(docsrs)))]
-
-#[cfg(feature = "alloc")]
-extern crate alloc;
 
 /// Autonomous System Number (ASN)
 ///

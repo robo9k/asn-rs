@@ -5,7 +5,7 @@ edition = "2021"
 description = "Typesafe Autonomous System Number (ASN)"
 repository = "https://github.com/robo9k/asn-rs"
 license = "MIT OR Apache-2.0"
-categories = ["no-std"]
+categories = ["no-std", "no-std::no-alloc"]
 
 [package.metadata.docs.rs]
 targets = []
@@ -19,10 +19,5 @@ maintenance = { status = "experimental" }
 
 [features]
 default = [
-    "std",
-    "alloc"
+
 ]
-std = [
-    "alloc",
-]
-alloc = []
