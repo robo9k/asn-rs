@@ -2,10 +2,10 @@
 name = "asn"
 version = "0.1.0"
 edition = "2021"
-description = "Typesafe Autonomous System Number (ASN)"
+description = "Newtype for Autonomous System Number (ASN)"
 repository = "https://github.com/robo9k/asn-rs"
 license = "MIT OR Apache-2.0"
-categories = ["no-std", "no-std::no-alloc"]
+categories = ["no-std", "no-std::no-alloc", "parser-implementations"]
 
 [package.metadata.docs.rs]
 targets = []
