@@ -19,7 +19,7 @@ extern crate alloc;
 pub struct Asn(u32);
 
 impl Asn {
-    /// ASN for AS 0 (zero) as per [RFC 7607](https://datatracker.ietf.org/doc/html/rfc7607)
+    /// Reserved ASN for RPKI AS 0 (zero) as per [RFC 7607](https://datatracker.ietf.org/doc/html/rfc7607)
     pub const ZERO: Self = Self::new(0);
 
     /// Reserved "Last" 16-bit ASN as per [RFC 7300](https://datatracker.ietf.org/doc/html/rfc7300)
