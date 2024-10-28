@@ -22,12 +22,20 @@ impl Asn {
     /// ASN for AS 0 (zero) as per [RFC 7607](https://datatracker.ietf.org/doc/html/rfc7607)
     pub const ZERO: Self = Self::new(0);
 
+    /// Reserved "Last" 16-bit ASN as per [RFC 7300](https://datatracker.ietf.org/doc/html/rfc7300)
+    pub const LAST: Self = Self::new(65535);
+
+    /// Reserved "Last" 32-bit ASN as per [RFC 7300](https://datatracker.ietf.org/doc/html/rfc7300)
+    pub const LAST4: Self = Self::new(4294967295);
+
     #[inline]
     pub const fn new(asn: u32) -> Self {
         Self(asn)
     }
 
     // TODO: pub const from_str
+
+    // TODO: pub const fn is_reserved_last ?
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -121,5 +129,11 @@ mod tests {
         // https://datatracker.ietf.org/doc/html/rfc5396#section-2
         assert_eq!(format!("{}", Asn::new(65526)), "65526");
         assert_eq!(format!("{}", Asn::new(65546)), "65546");
+    }
+
+    #[test]
+    fn test_last_eq() {
+        assert_eq!(Asn::LAST, Asn::new(65535));
+        assert_eq!(Asn::LAST4, Asn::new(4294967295));
     }
 }
