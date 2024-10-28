@@ -47,6 +47,10 @@ impl Asn {
     /// Reserved to represent non-mappable four-octet AS numbers as two-octet AS numbers as per [RFC 6793](https://datatracker.ietf.org/doc/html/rfc6793)
     pub const TRANS: Self = Self::new(23456);
 
+    /// Reserved as per [IANA 32-bit ASNs](https://www.iana.org/assignments/as-numbers/as-numbers.xhtml)
+    pub const RESERVED_IANA4: core::ops::RangeInclusive<Self> =
+        (Self::new(65552)..=Self::new(131071));
+
     #[inline]
     pub const fn new(asn: u32) -> Self {
         Self(asn)
@@ -61,6 +65,8 @@ impl Asn {
     // TODO: pub const fn is_reserved_private ?
 
     // TODO: pub const fn is_reserved_trans ?
+
+    // TODO: pub const fn is_reserved_iana ? (reserved4 or just reserved would clash with a fn encompassing the other reservations)
 }
 
 impl core::convert::From<Asn> for u32 {
@@ -179,5 +185,10 @@ mod tests {
     #[test]
     fn test_trans_eq() {
         assert_eq!(Asn::TRANS, Asn::new(23456));
+    }
+
+    #[test]
+    fn test_reserved_iana_contains() {
+        assert!(Asn::RESERVED_IANA4.contains(&Asn::new(100000)));
     }
 }
